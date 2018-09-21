@@ -1,0 +1,23 @@
+
+<div *ngIf="auth.loggedIn else notAuthorized">
+<p>
+  about works!
+</p>
+
+<button (click)="calculation">calculate</button>
+
+
+</div>
+
+<ng-template #calculation>
+
+
+  {{calculate()}}
+
+
+</ng-template>
+
+<ng-template #notAuthorized>
+<app-not-logged-in></app-not-logged-in>
+
+</ng-template>
