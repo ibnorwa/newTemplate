@@ -16,16 +16,36 @@ export class LoginComponent implements OnInit {
 
     this.auth.login(this.email, this.password);
     this.event.emit(false);
+
   }
 
   logout() {
     this.auth.logout();
+
+    
   }
   register() {
 
     this.auth.register(this.email, this.password);
   }
+
+  newRegister(){
+
+    this.auth.newRegister(this.email, this.password);
+  }
   ngOnInit() {
   }
+
+  // newRegister() {
+
+  //   this.auth.register(this.email, this.password).catch(function(error) {
+  //     // Handle Errors here.
+  //     var errorCode = error.code;
+  //     var errorMessage = error.message;
+  //     return error.message; 
+  //   });
+
+  // }
+ 
 
 }

@@ -1,6 +1,7 @@
+import { MyAppErrorHandlerService } from './my-app-error-handler.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, ErrorHandler } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 
@@ -9,9 +10,11 @@ import { AngularFireAuth } from '@angular/fire/auth';
 })
 export class UserService {
   errorLog: Error;
+  error: Error;
   redirectURL: string;
   loggedIn = false;
-  constructor(public afAuth: AngularFireAuth, router: Router) {
+  
+  constructor(public afAuth: AngularFireAuth, router: Router, public errorHandling:MyAppErrorHandlerService) {
     this.afAuth.auth.onAuthStateChanged(user => {
       if (user) {
         console.log('here is true');
@@ -32,25 +35,54 @@ export class UserService {
   }
 
   login(email: string, password: string) {
-    // this.afAuth.auth.signInWithPopup(new auth.GoogleAuthProvider());
 
-    const pr = this.afAuth.auth.signInWithEmailAndPassword(email, password);
-    pr.catch(e => { console.log(e.message); this.errorLog = e; });
-    this.loggedIn = true;
-    console.log(this.loggedIn);
+    this.afAuth.auth.signInWithEmailAndPassword(email, password).then(() => {
+      console.log("successful login");
+      return true;
+    }).catch(function (error) {
+
+      console.log(error);
+      this.ErrorHandler(error);
+    });
   }
   logout() {
     this.afAuth.auth.signOut();
     this.loggedIn = false;
     console.log(this.loggedIn);
 
+
+    // this piece of code came from https://firebase.google.com/docs/auth/web/password-auth
+    // Authenticate with Firebase using Password-Based Accounts using Javascript
+    this.afAuth.auth.signOut().then(function () {
+
+      console.log('Log Out successful')
+    }).catch(function (error) {
+      console.log(error);
+      this.break;
+    });
+
   }
 
   register(email: string, password: string) {
-    const pr = this.afAuth.auth.createUserWithEmailAndPassword(email, password);
-    pr.catch(e => { console.log(e.message); this.errorLog = e; });
+
+    this.afAuth.auth.createUserWithEmailAndPassword(email, password).then(()=>{console.log('successful register')}).catch(function(error){
+
+      console.log(error);
+    });
+
   }
 
+  newRegister(email: string, password: string) {
+    this.afAuth.auth.createUserWithEmailAndPassword(email, password).then().catch(function (error) {
+      // Handle Errors here.
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      //this.errorLog = error;
+      console.log(errorCode, errorMessage)
+      // ...
+    });
+
+  }
 
   isLoggedIn(): boolean {
     this.afAuth.auth.onAuthStateChanged(user => {

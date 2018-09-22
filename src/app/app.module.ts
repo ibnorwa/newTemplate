@@ -2,7 +2,7 @@ import { UserService } from './../services/user.service';
 import { AuthService } from './../services/auth.service';
 import { AuthGuardService } from './../services/auth-guard.service';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, ErrorHandler } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -15,6 +15,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FormsModule } from '@angular/forms';
+import { MyAppErrorHandlerService } from '../services/my-app-error-handler.service';
 
 const appRoutes: Routes = [
   { path: 'Home', component: HomeComponent },
@@ -34,7 +35,7 @@ const appRoutes: Routes = [
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes, { enableTracing: true }), FormsModule,
+    RouterModule.forRoot(appRoutes), FormsModule,
     AngularFireModule.initializeApp(environment.firebase, 'myApplication'),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
@@ -42,7 +43,12 @@ const appRoutes: Routes = [
 
 
   ],
-  providers: [AuthGuardService, AuthService, UserService],
+  providers: [AuthGuardService, 
+              AuthService, 
+              UserService, 
+              MyAppErrorHandlerService
+              
+            ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
