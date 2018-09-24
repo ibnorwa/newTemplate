@@ -1,6 +1,10 @@
+import { Observable } from 'rxjs';
+import { AppErrorHandler } from './../appErrorHandler';
 import { UserService } from './../../services/user.service';
 import { FormsModule } from '@angular/forms';
-import { Component, OnInit, NgModule, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, NgModule, Output, EventEmitter, ErrorHandler } from '@angular/core';
+import { HttpClient } from 'selenium-webdriver/http';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -8,15 +12,18 @@ import { Component, OnInit, NgModule, Output, EventEmitter } from '@angular/core
 })
 export class LoginComponent implements OnInit {
   @Output() event = new EventEmitter<boolean>();
-  constructor(private auth: UserService) { }
+  constructor(private auth: UserService, private _errorAlert: AppErrorHandler) { }
   email = '';
   password = '';
   reg = false;
-  login() {
+  errorAlert = new Observable();
 
+
+  login() {
+    console.log(this.errorAlert);
     this.auth.login(this.email, this.password);
     this.event.emit(false);
-
+    console.log(this.errorAlert);
   }
 
   logout() {
@@ -27,6 +34,12 @@ export class LoginComponent implements OnInit {
   register() {
 
     this.auth.register(this.email, this.password);
+  }
+
+
+  loginWithGmail(){
+
+    
   }
 
   newRegister(){

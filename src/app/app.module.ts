@@ -1,3 +1,5 @@
+
+import { AppErrorHandler } from './appErrorHandler';
 import { UserService } from './../services/user.service';
 import { AuthService } from './../services/auth.service';
 import { AuthGuardService } from './../services/auth-guard.service';
@@ -15,7 +17,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { FormsModule } from '@angular/forms';
-import { MyAppErrorHandlerService } from '../services/my-app-error-handler.service';
+//import { MyAppErrorHandlerService } from '../services/my-app-error-handler.service';
 
 const appRoutes: Routes = [
   { path: 'Home', component: HomeComponent },
@@ -31,11 +33,12 @@ const appRoutes: Routes = [
     HomeComponent,
     AboutComponent,
     NotLoggedInComponent,
+    
     LoginComponent
   ],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(appRoutes), FormsModule,
+    RouterModule.forRoot(appRoutes), FormsModule, 
     AngularFireModule.initializeApp(environment.firebase, 'myApplication'),
     AngularFirestoreModule, // imports firebase/firestore, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features,
@@ -46,7 +49,9 @@ const appRoutes: Routes = [
   providers: [AuthGuardService, 
               AuthService, 
               UserService, 
-              MyAppErrorHandlerService
+              {
+                provide: ErrorHandler, useClass: AppErrorHandler
+              }
               
             ],
   bootstrap: [AppComponent]

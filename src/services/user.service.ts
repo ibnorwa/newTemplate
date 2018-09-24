@@ -14,7 +14,7 @@ export class UserService {
   redirectURL: string;
   loggedIn = false;
   
-  constructor(public afAuth: AngularFireAuth, router: Router, public errorHandling:MyAppErrorHandlerService) {
+  constructor(public afAuth: AngularFireAuth, router: Router) {
     this.afAuth.auth.onAuthStateChanged(user => {
       if (user) {
         console.log('here is true');
@@ -40,9 +40,9 @@ export class UserService {
       console.log("successful login");
       return true;
     }).catch(function (error) {
-
-      console.log(error);
-      this.ErrorHandler(error);
+      throw(error);
+      //console.log(error);
+      
     });
   }
   logout() {
@@ -67,7 +67,7 @@ export class UserService {
 
     this.afAuth.auth.createUserWithEmailAndPassword(email, password).then(()=>{console.log('successful register')}).catch(function(error){
 
-      console.log(error);
+      throw(error);
     });
 
   }
